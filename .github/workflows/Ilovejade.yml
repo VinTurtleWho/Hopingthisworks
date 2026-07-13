@@ -28,12 +28,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # 4. Android NDK (Grabs r27d specifically for the C++ compiler)
+            # 4. Android NDK (Downgraded to r23c for shaderc support)
       - name: Setup Android NDK
         id: setup-ndk
         uses: nttld/setup-ndk@v1
         with:
-          ndk-version: r27d
+          ndk-version: r23c
 
       # 5. Configure CMake
       - name: Configure CMake
@@ -42,8 +42,9 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
-            -DCMAKE_CXX_FLAGS="-I${{ steps.setup-ndk.outputs.ndk-path }}/sources/android/native_app_glue" \
+            -DCMAKE_CXX_FLAGS="-I${{ steps.setup-ndk.outputs.ndk-path }}/sources/android/native_app_glue -I${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/include" \
             -S app/src/main/jni
+            
             
 
       # 6. Build (Compiles the .so files)
