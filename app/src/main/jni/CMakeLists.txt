@@ -10,7 +10,6 @@ include_directories(
     .
     Android_draw
     Android_touch
-    Android_vulkan
     ImGui
     ImGui/backends
     ImGui/font
@@ -33,7 +32,6 @@ file(GLOB SRC_TOUCH "Android_touch/*.cpp" "Android_touch/*.c" "Android_touch/*.c
 file(GLOB SRC_UTILS "My_Utils/*.cpp" "My_Utils/*.c" "My_Utils/*.cc" "My_Utils/res/*.c")
 file(GLOB SRC_IMGUI "ImGui/*.cpp" "ImGui/*.c" "ImGui/*.cc")
 file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/*.cpp" "ImGui/backends/*.c" "ImGui/backends/*.cc")
-file(GLOB SRC_VULKAN "Android_vulkan/*.cpp" "Android_vulkan/*.c" "Android_vulkan/*.cc")
 
 set(SRC_FILES
     ${SRC_MAIN}
@@ -43,17 +41,14 @@ set(SRC_FILES
     ${SRC_UTILS}
     ${SRC_IMGUI}
     ${SRC_IMGUI_BACKENDS}
-    ${SRC_VULKAN}
 )
 
 add_executable(Starcool.sh ${SRC_FILES})
 
-# Link the libraries AND the pre-built shaderc static library
 target_link_libraries(Starcool.sh
     log
     z
     android
     GLESv2
     EGL
-    ${EXACT_NDK_PATH}/sources/third_party/shaderc/libs/c++_static/${ANDROID_ABI}/libshaderc.a
 )
