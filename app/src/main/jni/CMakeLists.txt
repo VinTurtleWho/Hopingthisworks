@@ -45,17 +45,18 @@ set(SRC_FILES
     ${SRC_IMGUI_BACKENDS}
     ${SRC_VULKAN}
 )
-# Inject NDK paths globally to bypass the .sh name glitch
-include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
-include_directories(${ANDROID_NDK}/sources/third_party/shaderc/include)
-
+# Inject EXACT NDK paths passed directly from the GitHub server
+include_directories(${EXACT_NDK_PATH}/sources/android/native_app_glue)
+include_directories(${EXACT_NDK_PATH}/sources/third_party/shaderc/include)
 
 add_executable(Starcool.sh ${SRC_FILES})
 
+# Link the libraries AND the pre-built shaderc static library
 target_link_libraries(Starcool.sh
     log
     z
     android
     GLESv2
     EGL
+    ${EXACT_NDK_PATH}/sources/third_party/shaderc/libs/c++_static/${ANDROID_ABI}/libshaderc.a
 )
