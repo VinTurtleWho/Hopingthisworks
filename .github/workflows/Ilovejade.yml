@@ -43,8 +43,9 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
-            -DCMAKE_CXX_FLAGS="-I${{ steps.setup-ndk.outputs.ndk-path }}/sources/android/native_app_glue -I${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/include" \
+            -DEXACT_NDK_PATH=${{ steps.setup-ndk.outputs.ndk-path }} \
             -S app/src/main/jni
+            
             
             
 
