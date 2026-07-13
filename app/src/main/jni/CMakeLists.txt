@@ -31,7 +31,8 @@ file(GLOB SRC_OXORANY "Oxorany/*.cpp" "Oxorany/*.c" "Oxorany/*.cc")
 file(GLOB SRC_TOUCH "Android_touch/*.cpp" "Android_touch/*.c" "Android_touch/*.cc")
 file(GLOB SRC_UTILS "My_Utils/*.cpp" "My_Utils/*.c" "My_Utils/*.cc" "My_Utils/res/*.c")
 file(GLOB SRC_IMGUI "ImGui/*.cpp" "ImGui/*.c" "ImGui/*.cc")
-file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/*.cpp" "ImGui/backends/*.c" "ImGui/backends/*.cc")
+# Only include the Android backend, skip the Vulkan backend
+file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/imgui_impl_android.cpp" "ImGui/backends/imgui_impl_android.h")
 
 set(SRC_FILES
     ${SRC_MAIN}
