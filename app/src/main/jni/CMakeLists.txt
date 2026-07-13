@@ -45,9 +45,6 @@ set(SRC_FILES
     ${SRC_IMGUI_BACKENDS}
     ${SRC_VULKAN}
 )
-# Inject EXACT NDK paths passed directly from the GitHub server
-include_directories(${EXACT_NDK_PATH}/sources/android/native_app_glue)
-include_directories(${EXACT_NDK_PATH}/sources/third_party/shaderc/include)
 
 add_executable(Starcool.sh ${SRC_FILES})
 
