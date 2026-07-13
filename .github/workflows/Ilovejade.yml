@@ -13,49 +13,36 @@ jobs:
         abi: [armeabi-v7a, arm64-v8a]
 
     steps:
-      # 1. Checkout
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Java (Installs JDK 17 as requested)
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      # 3. Android SDK (Sets up the Android environment)
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-            # 4. Android NDK (Downgraded to r21e for built-in shaderc)
-      - name: Setup Android NDK
-        id: setup-ndk
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r21e
-
-      # 4.5 Physically copy the hidden NDK files directly into your project
-      - name: Copy Shaderc and Native App Glue
+      # DOWNLOAD THE RAW GOOGLE NDK (Bypasses GitHub's stripped cache)
+      - name: Download Raw Google NDK
         run: |
-          cp -r ${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/include/shaderc app/src/main/jni/
-          cp ${{ steps.setup-ndk.outputs.ndk-path }}/sources/android/native_app_glue/android_native_app_glue.h app/src/main/jni/
-          cp ${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/libs/c++_static/${{ matrix.abi }}/libshaderc.a app/src/main/jni/
+          wget -q https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
+          unzip -q android-ndk-r21e-linux-x86_64.zip
 
-      # 5. Configure CMake (Cleaned up, no variables needed)
+      # INJECT THE MISSING FILES DIRECTLY INTO YOUR JNI FOLDER
+      - name: Inject Missing Files
+        run: |
+          cp -r android-ndk-r21e/sources/third_party/shaderc/include/shaderc app/src/main/jni/
+          cp android-ndk-r21e/sources/android/native_app_glue/android_native_app_glue.h app/src/main/jni/
+          cp android-ndk-r21e/sources/third_party/shaderc/libs/c++_static/${{ matrix.abi }}/libshaderc.a app/src/main/jni/
+
+      # CONFIGURE CMAKE USING THE DOWNLOADED NDK
       - name: Configure CMake
         run: |
           cmake -B build-${{ matrix.abi }} \
-            -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/android-ndk-r21e/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
             -S app/src/main/jni
 
-      # 6. Build
+      # BUILD THE CHEAT
       - name: Build Native Project
         run: cmake --build build-${{ matrix.abi }} --config Release
 
-      # 7. Upload Artifact
+      # UPLOAD THE .SO FILES
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
