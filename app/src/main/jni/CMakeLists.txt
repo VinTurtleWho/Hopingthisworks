@@ -45,6 +45,9 @@ set(SRC_FILES
     ${SRC_IMGUI_BACKENDS}
     ${SRC_VULKAN}
 )
+target_include_directories(Starcool.sh PRIVATE ${CMAKE_ANDROID_NDK}/sources/android/native_app_glue)
+target_include_directories(Starcool.sh PRIVATE ${CMAKE_ANDROID_NDK}/sources/third_party/shaderc/include)
+
 
 add_executable(Starcool.sh ${SRC_FILES})
 
