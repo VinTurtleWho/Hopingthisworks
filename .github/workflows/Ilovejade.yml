@@ -28,32 +28,34 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # 4. Android NDK (Downgraded to r21e for built-in shaderc)
+            # 4. Android NDK (Downgraded to r21e for built-in shaderc)
       - name: Setup Android NDK
         id: setup-ndk
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r21e
-          
 
-      # 5. Configure CMake
+      # 4.5 Physically copy the hidden NDK files directly into your project
+      - name: Copy Shaderc and Native App Glue
+        run: |
+          cp -r ${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/include/shaderc app/src/main/jni/
+          cp ${{ steps.setup-ndk.outputs.ndk-path }}/sources/android/native_app_glue/android_native_app_glue.h app/src/main/jni/
+          cp ${{ steps.setup-ndk.outputs.ndk-path }}/sources/third_party/shaderc/libs/c++_static/${{ matrix.abi }}/libshaderc.a app/src/main/jni/
+
+      # 5. Configure CMake (Cleaned up, no variables needed)
       - name: Configure CMake
         run: |
           cmake -B build-${{ matrix.abi }} \
             -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
-            -DEXACT_NDK_PATH=${{ steps.setup-ndk.outputs.ndk-path }} \
             -S app/src/main/jni
-            
-            
-            
 
-      # 6. Build (Compiles the .so files)
+      # 6. Build
       - name: Build Native Project
         run: cmake --build build-${{ matrix.abi }} --config Release
 
-      # 7. Upload Artifact (Zips them up so you can download them)
+      # 7. Upload Artifact
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
