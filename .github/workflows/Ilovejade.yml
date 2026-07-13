@@ -16,33 +16,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # DOWNLOAD THE RAW GOOGLE NDK (Bypasses GitHub's stripped cache)
-      - name: Download Raw Google NDK
-        run: |
-          wget -q https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
-          unzip -q android-ndk-r21e-linux-x86_64.zip
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r27d
 
-      # INJECT THE MISSING FILES DIRECTLY INTO YOUR JNI FOLDER
-      - name: Inject Missing Files
-        run: |
-          cp -r android-ndk-r21e/sources/third_party/shaderc/include/shaderc app/src/main/jni/
-          cp android-ndk-r21e/sources/android/native_app_glue/android_native_app_glue.h app/src/main/jni/
-          cp android-ndk-r21e/sources/third_party/shaderc/libs/c++_static/${{ matrix.abi }}/libshaderc.a app/src/main/jni/
-
-      # CONFIGURE CMAKE USING THE DOWNLOADED NDK
       - name: Configure CMake
         run: |
           cmake -B build-${{ matrix.abi }} \
-            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/android-ndk-r21e/build/cmake/android.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.ANDROID_NDK_LATEST_HOME }}/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
             -S app/src/main/jni
 
-      # BUILD THE CHEAT
       - name: Build Native Project
         run: cmake --build build-${{ matrix.abi }} --config Release
 
-      # UPLOAD THE .SO FILES
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
