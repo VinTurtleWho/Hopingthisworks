@@ -17,21 +17,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Android NDK
-        id: setup-ndk
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r27d
 
-      - name: Configure CMake
+      - name: Configure and Build
         run: |
           cmake -B build-${{ matrix.abi }} \
-            -DCMAKE_TOOLCHAIN_FILE=${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.ANDROID_NDK_LATEST_HOME }}/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=${{ matrix.abi }} \
             -DANDROID_PLATFORM=android-24 \
             -S app/src/main/jni
-
-      - name: Build Native Project
-        run: cmake --build build-${{ matrix.abi }} --config Release
+          cmake --build build-${{ matrix.abi }} --config Release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
