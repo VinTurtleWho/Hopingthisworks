@@ -35,3 +35,6 @@ jobs:
             -DANDROID_PLATFORM=android-24 \
             -DCMAKE_BUILD_TYPE=Release \
             -S app/src/main/jni
+      - name: Build
+        run: |
+          cmake --build build --config Release
