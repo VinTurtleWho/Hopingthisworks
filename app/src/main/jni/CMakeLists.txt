@@ -46,8 +46,8 @@ set(SRC_FILES
     ${SRC_VULKAN}
 )
 # Inject NDK paths globally to bypass the .sh name glitch
-include_directories(${CMAKE_ANDROID_NDK}/sources/android/native_app_glue)
-include_directories(${CMAKE_ANDROID_NDK}/sources/third_party/shaderc/include)
+include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
+include_directories(${ANDROID_NDK}/sources/third_party/shaderc/include)
 
 
 add_executable(Starcool.sh ${SRC_FILES})
