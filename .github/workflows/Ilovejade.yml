@@ -30,11 +30,12 @@ jobs:
 
       - name: Environment Fixes (Log.h & Symlinks)
         run: |
-          # 1. Generate the missing Log.h ghost file
+          # 1. Generate the missing Log.h ghost file with the correct TAG definition
           cat << 'EOF' > app/src/main/jni/Android_vulkan/Log.h
           #pragma once
           #include <android/log.h>
-          #define LOG_TAG "Vulkan"
+          #define TAG "Starcool"
+          #define LOG_TAG "Starcool"
           #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
           #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
           #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
