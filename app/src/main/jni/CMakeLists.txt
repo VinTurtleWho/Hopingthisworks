@@ -20,6 +20,7 @@ include_directories(
     Oxorany
     Font
     game-activity
+    game-activity/prefab-src/modules/game-activity/include
 )
 
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
@@ -35,7 +36,7 @@ file(GLOB SRC_UTILS "My_Utils/*.cpp" "My_Utils/*.c" "My_Utils/*.cc" "My_Utils/re
 file(GLOB SRC_IMGUI "ImGui/*.cpp" "ImGui/*.c" "ImGui/*.cc")
 file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/*.cpp" "ImGui/backends/*.c" "ImGui/backends/*.cc")
 file(GLOB SRC_VULKAN "Android_vulkan/*.cpp" "Android_vulkan/*.c" "Android_vulkan/*.cc")
-file(GLOB SRC_GAME_ACTIVITY "game-activity/*.cpp" "game-activity/native_app_glue/*.c")
+file(GLOB_RECURSE SRC_GAME_ACTIVITY "game-activity/*.cpp" "game-activity/*.c")
 
 set(SRC_FILES
     ${SRC_MAIN}
