@@ -30,9 +30,9 @@ jobs:
 
       - name: Fetch Missing GameActivity
         run: |
-          git clone --depth 1 https://github.com/android/gamesdk.git
+          git clone --depth 1 https://android.googlesource.com/platform/frameworks/opt/gamesdk
           cp -r gamesdk/game-activity app/src/main/jni/
-
+          
       - name: Configure CMake
         run: |
           cmake -B build \
