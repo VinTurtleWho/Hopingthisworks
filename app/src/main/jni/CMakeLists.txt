@@ -33,10 +33,7 @@ file(GLOB SRC_TOUCH "Android_touch/*.cpp" "Android_touch/*.c" "Android_touch/*.c
 file(GLOB SRC_UTILS "My_Utils/*.cpp" "My_Utils/*.c" "My_Utils/*.cc" "My_Utils/res/*.c")
 file(GLOB SRC_IMGUI "ImGui/*.cpp" "ImGui/*.c" "ImGui/*.cc")
 file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/*.cpp" "ImGui/backends/*.c" "ImGui/backends/*.cc")
-
-# SURGICAL FIX: Do not glob the entire folder. 
-# Only compile the wrapper to satisfy ImGui and ignore the broken GameActivity junk.
-set(SRC_VULKAN "Android_vulkan/vulkan_wrapper.cpp")
+file(GLOB SRC_VULKAN "Android_vulkan/*.cpp" "Android_vulkan/*.c" "Android_vulkan/*.cc")
 
 set(SRC_FILES
     ${SRC_MAIN}
