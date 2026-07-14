@@ -19,7 +19,6 @@ include_directories(
     My_Utils/res
     Oxorany
     Font
-    game-activity
 )
 
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
@@ -34,8 +33,10 @@ file(GLOB SRC_TOUCH "Android_touch/*.cpp" "Android_touch/*.c" "Android_touch/*.c
 file(GLOB SRC_UTILS "My_Utils/*.cpp" "My_Utils/*.c" "My_Utils/*.cc" "My_Utils/res/*.c")
 file(GLOB SRC_IMGUI "ImGui/*.cpp" "ImGui/*.c" "ImGui/*.cc")
 file(GLOB SRC_IMGUI_BACKENDS "ImGui/backends/*.cpp" "ImGui/backends/*.c" "ImGui/backends/*.cc")
-file(GLOB SRC_VULKAN "Android_vulkan/*.cpp" "Android_vulkan/*.c" "Android_vulkan/*.cc")
-file(GLOB_RECURSE SRC_GAME_ACTIVITY "game-activity/*.cpp" "game-activity/*.c")
+
+# SURGICAL FIX: Do not glob the entire folder. 
+# Only compile the wrapper to satisfy ImGui and ignore the broken GameActivity junk.
+set(SRC_VULKAN "Android_vulkan/vulkan_wrapper.cpp")
 
 set(SRC_FILES
     ${SRC_MAIN}
@@ -46,7 +47,6 @@ set(SRC_FILES
     ${SRC_IMGUI}
     ${SRC_IMGUI_BACKENDS}
     ${SRC_VULKAN}
-    ${SRC_GAME_ACTIVITY}
 )
 
 add_executable(Starcool.sh ${SRC_FILES})
