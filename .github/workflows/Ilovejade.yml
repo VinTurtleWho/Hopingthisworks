@@ -28,8 +28,9 @@ jobs:
         with:
           ndk-version: r27d
 
-      - name: Generate missing Log.h
+      - name: Environment Fixes (Log.h & Symlinks)
         run: |
+          # 1. Generate the missing Log.h ghost file
           cat << 'EOF' > app/src/main/jni/Android_vulkan/Log.h
           #pragma once
           #include <android/log.h>
@@ -39,6 +40,10 @@ jobs:
           #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
           #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
           EOF
+          
+          # 2. Fix the case-sensitivity trap by creating a shortcut
+          cd app/src/main/jni
+          ln -s ImGui imgui
 
       - name: Configure CMake
         run: |
